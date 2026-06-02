@@ -26,7 +26,6 @@ class SiteDaoTest {
     dao = new SiteDao(source);
   }
 
-  @Disabled("Retire cette annotation pour activer le test")
   @Test
   void inserer_ajoute_un_site_relisible() {
     Site nouveau = new Site("752204", "ZAC Nord", "PointFixeRecherche", null, "2026-05-01");
@@ -37,7 +36,6 @@ class SiteDaoTest {
     assertThat(dao.findAll()).extracting(Site::numeroCarre).contains("640380", "752204");
   }
 
-  @Disabled("Retire cette annotation pour activer le test")
   @Test
   void mettre_a_jour_modifie_les_champs_du_site() {
     dao.update(
@@ -49,7 +47,6 @@ class SiteDaoTest {
     assertThat(relu.commentaire()).isEqualTo("Capteur déplacé");
   }
 
-  @Disabled("Retire cette annotation pour activer le test")
   @Test
   void supprimer_retire_le_site() {
     dao.insert(new Site("123456", "À supprimer", "PointFixeStandard", null, "2026-05-02"));
@@ -60,7 +57,6 @@ class SiteDaoTest {
     assertThat(dao.getByNumeroCarre("123456")).isEmpty();
   }
 
-  @Disabled("Retire cette annotation pour activer le test")
   @Test
   void mettre_a_jour_ne_modifie_que_le_site_vise() {
     dao.insert(
@@ -76,7 +72,6 @@ class SiteDaoTest {
     assertThat(temoin.commentaire()).isEqualTo("ne doit pas bouger");
   }
 
-  @Disabled("Retire cette annotation pour activer le test")
   @Test
   void supprimer_ne_retire_que_le_site_vise() {
     dao.insert(new Site("111111", "Site A", "PointFixeStandard", null, "2026-05-03"));
