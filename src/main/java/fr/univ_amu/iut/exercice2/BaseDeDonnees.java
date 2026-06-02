@@ -1,6 +1,9 @@
 package fr.univ_amu.iut.exercice2;
 
 import fr.univ_amu.iut.jdbc.DataAccessException;
+import org.sqlite.SQLiteConfig;
+import org.sqlite.SQLiteDataSource;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -42,7 +45,11 @@ public class BaseDeDonnees {
     // 2. SQLiteDataSource sqlite = new SQLiteDataSource(config);
     //    sqlite.setUrl("jdbc:sqlite:" + chemin);
     // 3. source = sqlite;
-
+    SQLiteConfig config = new SQLiteConfig();
+    config.enforceForeignKeys(true);
+    SQLiteDataSource sqlite = new SQLiteDataSource(config);
+    sqlite.setUrl("jdbc:sqlite:" + chemin);
+    source = sqlite;
     return source;
   }
 
