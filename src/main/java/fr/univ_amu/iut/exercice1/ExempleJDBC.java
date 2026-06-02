@@ -72,6 +72,15 @@ public class ExempleJDBC {
     // 2. Exécuter le SELECT : st.executeQuery("SELECT code, nom_vernaculaire FROM taxon").
     // 3. Parcourir le ResultSet avec while (rs.next()) et, pour chaque ligne, ajouter à `lignes`
     //    la chaîne : rs.getString("code") + " - " + rs.getString("nom_vernaculaire").
+    try (Statement st = connexion.createStatement();
+    ResultSet rs = st.executeQuery("SELECT code, nom_vernaculaire FROM taxon")) {
+      List <String> list = new ArrayList<>();
+      while (rs.next()){
+        String code = new String(
+                rs.getString("code") + " - " + rs.getString("nom_vernaculaire"));
+        list.add(code);
+      }
+    }
 
     return lignes;
   }
