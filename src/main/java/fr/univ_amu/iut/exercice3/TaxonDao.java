@@ -1,5 +1,6 @@
 package fr.univ_amu.iut.exercice3;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,7 +29,7 @@ public class TaxonDao {
   }
 
   /** Renvoie tous les taxons de la table, triés par code. */
-  public List<Taxon> findAll() {
+  public List<Taxon> findAll() throws SQLException {
     List<Taxon> taxons = new ArrayList<>();
     String sql = "SELECT code, nom_latin, nom_vernaculaire FROM taxon ORDER BY code";
 
@@ -38,12 +39,22 @@ public class TaxonDao {
     // - préparer puis exécuter la requête (connexion.prepareStatement(sql), ps.executeQuery()) ;
     // - pour chaque ligne, appeler depuis(rs) et l'ajouter à `taxons`.
     // - en cas de SQLException, lever une DataAccessException.
-
+    try (Connection connection = source.getConnection();
+        PreparedStatement ps = connection.prepareStatement(sql)){
+      try (ResultSet rs = ps.executeQuery()) {
+        while(rs.next()){
+          Taxon temp = depuis(rs);
+          taxons.add(temp);
+        }
+      } catch (SQLException e) {
+          throw new RuntimeException(e);
+      }
+    }
     return taxons;
   }
 
   /** Cherche un taxon par son code ; renvoie {@link Optional#empty()} si absent. */
-  public Optional<Taxon> getByCode(String code) {
+  public Optional<Taxon> getByCode(String code) throws SQLException {
     String sql = "SELECT code, nom_latin, nom_vernaculaire FROM taxon WHERE code = ?";
     Optional<Taxon> resultat = Optional.empty();
 
@@ -52,6 +63,17 @@ public class TaxonDao {
     // - préparer la requête, puis lier le paramètre `?` au code (méthode setString) ;
     // - exécuter ; si le ResultSet contient une ligne, construire le Taxon avec depuis(rs)
     //   et l'envelopper dans un Optional ; sinon, laisser `resultat` vide.
+    try (Connection connection = source.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql)) {
+      ps.setString(1,code);
+      try(ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          resultat = Optional.of(depuis(rs));
+        }
+      } catch (SQLException e) {
+          throw new RuntimeException(e);
+      }
+    }
 
     return resultat;
   }
