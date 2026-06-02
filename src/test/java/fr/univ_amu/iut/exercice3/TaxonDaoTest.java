@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import fr.univ_amu.iut.exercice2.BaseDeDonnees;
 import java.nio.file.Path;
+import java.sql.SQLException;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,17 +28,15 @@ class TaxonDaoTest {
     dao = new TaxonDao(source);
   }
 
-  @Disabled("Retire cette annotation pour activer le test")
   @Test
-  void trouver_tous_renvoie_les_quatre_taxons_tries_par_code() {
+  void trouver_tous_renvoie_les_quatre_taxons_tries_par_code() throws SQLException {
     assertThat(dao.findAll())
         .extracting(Taxon::code)
         .containsExactly("Nyclei", "Pippip", "Rhihip", "Tadten");
   }
 
-  @Disabled("Retire cette annotation pour activer le test")
   @Test
-  void trouver_par_code_renvoie_le_taxon_attendu() {
+  void trouver_par_code_renvoie_le_taxon_attendu() throws SQLException {
     Optional<Taxon> taxon = dao.getByCode("Pippip");
 
     assertThat(taxon).isPresent();
@@ -47,7 +46,7 @@ class TaxonDaoTest {
 
   @Disabled("Retire cette annotation pour activer le test")
   @Test
-  void trouver_par_code_inconnu_renvoie_vide() {
+  void trouver_par_code_inconnu_renvoie_vide() throws SQLException {
     assertThat(dao.getByCode("Zzzzzz")).isEmpty();
   }
 }
